@@ -1,0 +1,23 @@
+/**
+ * @author Fu Xiaochun
+ */
+ul,li{list-style: none;margin: 0;padding: 0;overflow: hidden;}
+.red{color: #F30;}
+.dp-wrap{width: 280px;border: 1px solid #F30;background-color: #fff;position: absolute;left: 10px;top:10px;font-size: 12px;border-radius: 3px;}
+.dp-menu{height: 30px;line-height: 30px;padding:5px;border-bottom: 1px solid #eee;}
+.dp-nav{width: 30px;height: 30px;text-align: center;line-height: 30px;color: #666;font-family:Simsun;float: left;display: inline;cursor: pointer;}
+.ym{width: 150px;height: 30px;float: left;text-align: center;}
+.ym > span{display: inline-block;}
+.ym > .y, .ym> .m{cursor: pointer;}
+.ym > .y{width:40px;}
+.ym > .m{width: 30px;}
+.dp-nav:hover,.ym > .y:hover, .ym> .m:hover{box-shadow: 0 0 2px rgba(0,0,0,.3);border-radius: 3px;}
+
+.day{height: 30px;border-bottom: 1px solid #CCC;}
+.day > span{width: 40px;display: inline-block;line-height: 30px;float: left;text-align: center;}
+
+.date{font-size: 14px;padding: 5px 0;}
+.date > li > del{font-style: normal;color: #CCC;text-decoration: none;}
+.date > li > span,.date del{width: 30px;display: inline-block;line-height: 30px;float: left;margin: 5px;text-align: center;cursor: pointer;border-radius: 50%;}
+.date > li > span:hover{background-color: #eee;}
+.date > li > span.cur{background-color: #f30;color: #FFF;}
