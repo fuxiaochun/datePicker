@@ -125,11 +125,12 @@ function getDateTpl(timeStamp) {
 
 }
 
-function initHTML() {
-	var curYear = getDates().year;
-	var curMonth = getDates().month;
+function initHTML(timeStamp) {
+	var timeStr = typeof timeStamp === 'undefined' ? +new Date(): timeStamp;
+	var curYear = getDates(timeStr).year;
+	var curMonth = getDates(timeStr).month;
 	var weekTpl = getWeekTpl();
-	var datesTpl = getDateTpl();
+	var datesTpl = getDateTpl(timeStr);
 
 	var $datePicker = $('<div class="dp-wrap" id="varfn-dp"><div class="dp-menu"><div class="dp-nav" id="varfn-lastY" title="上一年">&lt;&lt;</div><div class="dp-nav" id="varfn-lastM" title="上一月">&lt;</div><div class="ym"><span class="y" id="varfn-dp-y">' + curYear + '</span> 年 <span class="m" id="varfn-dp-m">' + curMonth + '</span> 月 </div><div class="dp-nav" id="varfn-nextM" title="下一月">&gt;</div><div class="dp-nav" id="varfn-nextY" title="下一年">&gt;&gt;</div></div><div class="day" id="varfn-dp-day">' + weekTpl + '</div><ul class="date" id="varfn-dp-date">' + datesTpl + '</ul></div>');
 	$('body').append($datePicker);
