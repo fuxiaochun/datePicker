@@ -3,8 +3,6 @@
  * @author Fu Xiaochun
  */
 
-
-
 function getDates(timeStamp) {
 	var D = typeof timeStamp === 'undefined' ? new Date() : new Date(timeStamp);
 	return {
@@ -37,29 +35,29 @@ function getTheDay(y, m, d) {
 	return new Date(y, m, d).getDay();
 }
 
-function makeDaysArr (len,position,monthDays){
+function makeDaysArr(len, position, monthDays) {
 	var arr = [];
 	var i = 0;
 	if (position === 'desc') {
-		for(;i<len;i++){
+		for (; i < len; i++) {
 			arr.unshift(monthDays - i);
 		}
-	}else{
-		for(;i<len;i++){
-			arr.push(i+1);
+	} else {
+		for (; i < len; i++) {
+			arr.push(i + 1);
 		}
 	}
 	return arr;
 }
 
-function makeDateListByWeek(arr){
+function makeDateListByWeek(arr) {
 	var len = arr.length;
-	var weeks = len/7;
+	var weeks = len / 7;
 	var start = 0;
 	var end = 0;
 	var tempArr = [];
 
-	for(var i= 0; i < weeks; i++){
+	for (var i = 0; i < weeks; i++) {
 		tempArr[i] = arr.splice(0, 7);
 	}
 	return tempArr;
@@ -73,7 +71,7 @@ function getDateTpl(timeStamp) {
 	var day = D.date;
 
 	var TODAY = getDates();
-	var todayStr = TODAY.year+'/'+TODAY.month+'/'+TODAY.date;
+	var todayStr = TODAY.year + '/' + TODAY.month + '/' + TODAY.date;
 
 	// 本月和上下月的每月总天数
 	var curMonthDays = getDaysEveryMonth(year, month, 0);
@@ -84,9 +82,9 @@ function getDateTpl(timeStamp) {
 	var startDays = getTheDay(year, month - 1, 1);
 	var endDays = 6 - getTheDay(year, month - 1, curMonthDays);
 
-	var beforeDaysArr = makeDaysArr(startDays,'desc',lastMonthDays);
-	var afterDaysArr = makeDaysArr(endDays,'asc');
-	var curDaysArr = makeDaysArr(curMonthDays,'asc');
+	var beforeDaysArr = makeDaysArr(startDays, 'desc', lastMonthDays);
+	var afterDaysArr = makeDaysArr(endDays, 'asc');
+	var curDaysArr = makeDaysArr(curMonthDays, 'asc');
 
 	// 日期列表数据:一维数组，以月为组
 	var dateListArr = beforeDaysArr.concat(curDaysArr).concat(afterDaysArr);
@@ -97,36 +95,35 @@ function getDateTpl(timeStamp) {
 	// 拼接字符串
 	var html = '';
 	var len = dateListArrByWeek.length;
-	var curYM = year+'/'+month;
+	var curYM = year + '/' + month;
 	var curYMD = '';
 	var todayClassStr = '';
 	var isFirstWeek,
 		isLastWeek,
 		loopDate;
-	for(var i = 0; i < len; i++){
+	for (var i = 0; i < len; i++) {
 		html += '<li>';
-			for (var j = 0; j < 7; j++) {
+		for (var j = 0; j < 7; j++) {
 
-				loopDate = dateListArrByWeek[i][j];
-				curYMD = curYM +'/'+ loopDate;
-				isFirstWeek = i === 0 && loopDate > 20;
-				isLastWeek  = i === len-1 && loopDate < 10;
-				todayClassStr = curYMD === todayStr ? 'class="cur"' : '';
+			loopDate = dateListArrByWeek[i][j];
+			curYMD = curYM + '/' + loopDate;
+			isFirstWeek = i === 0 && loopDate > 20;
+			isLastWeek = i === len - 1 && loopDate < 10;
+			todayClassStr = curYMD === todayStr ? 'class="cur"' : '';
 
-				if (  isFirstWeek || isLastWeek) {
-					html += '<del>'+ loopDate +'</del>';
-				}else{
-					html += '<span ' + todayClassStr + ' date-time="' + curYMD + '">'+ loopDate +'</span>';
-				}
+			if (isFirstWeek || isLastWeek) {
+				html += '<del>' + loopDate + '</del>';
+			} else {
+				html += '<span ' + todayClassStr + ' date-time="' + curYMD + '">' + loopDate + '</span>';
 			}
+		}
 		html += '</li>';
 	}
 	return html;
-
 }
 
 function initHTML(timeStamp) {
-	var timeStr = typeof timeStamp === 'undefined' ? +new Date(): timeStamp;
+	var timeStr = typeof timeStamp === 'undefined' ? +new Date() : timeStamp;
 	var curYear = getDates(timeStr).year;
 	var curMonth = getDates(timeStr).month;
 	var weekTpl = getWeekTpl();
@@ -136,6 +133,52 @@ function initHTML(timeStamp) {
 	$('body').append($datePicker);
 }
 
+function initSelection(data) {
+	var $html = null;
+	$('#varfn-dp-y, #varfn-dp-m').on('click', function(e) {
+
+		var $this = $(this);
+		var width = $this.outerWidth();
+		var $position = $this.position();
+		var left = $position.left;
+		var top = $position.top;
+		var html = '';
+
+		if ($this.hasClass('active')) {
+			return false;
+		}
+
+		$this.addClass('active').siblings('span').removeClass('active');
+		$('.date-selector').remove();
+
+		html += '<div class="date-selector"><ul>';
+		for (var i = 0; i < data.length; i++) {
+			html += '<li>' + data[i] + '</li>';
+		}
+		html += '</ul></div>';
+		$html = $(html);
+		$('#varfn-dp').append($html);
+		$html.css({
+			width: width - 2,
+			left: left,
+			top: top + 30
+		}).show();
+
+		return false;
+	});
+
+	$(document).on('click', function() {
+		$('.date-selector').remove();
+		$('.ym span').removeClass('active');
+	});
+}
+
+function changeDate(date) {
+	var datesTpl = getDateTpl(date);
+	$('#varfn-dp-date').html(datesTpl);
+}
+
 $(function() {
 	initHTML();
+	initSelection([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });
