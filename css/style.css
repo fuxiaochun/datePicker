@@ -11,7 +11,7 @@ ul,li{list-style: none;margin: 0;padding: 0;overflow: hidden;}
 .ym > .y, .ym> .m{cursor: pointer;}
 .ym > .y{width:40px;}
 .ym > .m{width: 30px;}
-.dp-nav:hover,.ym > .y:hover, .ym> .m:hover{box-shadow: 0 0 2px rgba(0,0,0,.3);border-radius: 3px;}
+.dp-nav:hover,.ym > .y:hover, .ym> .m:hover,.ym > .active{box-shadow: 0 0 2px rgba(0,0,0,.3);border-radius: 3px;}
 
 .day{height: 30px;border-bottom: 1px solid #CCC;}
 .day > span{width: 40px;display: inline-block;line-height: 30px;float: left;text-align: center;}
@@ -22,7 +22,7 @@ ul,li{list-style: none;margin: 0;padding: 0;overflow: hidden;}
 .date > li > span:hover{background-color: #eee;}
 .date > li > span.cur{background-color: #f30;color: #FFF;}
 
-.date-selector{height:150px;overflow:hidden;position: absolute;left: 0;top:0;text-align: center;background-color: #fff;border: 1px solid #eee;display: none;}
+.date-selector{height:240px;overflow:hidden;position: absolute;left: 0;top:0;text-align: center;background-color: #fff;display: none;box-shadow: 0 2px 2px rgba(0,0,0,.3);}
 .date-selector ul{width:100%;margin: 0;padding: 0;position: absolute;left: 0;top:0;}
 .date-selector li{list-style: none;height: 20px;line-height: 20px;cursor: pointer;}
 .date-selector li:hover{background-color: #f7f7f7;}

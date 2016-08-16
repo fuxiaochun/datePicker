@@ -129,20 +129,38 @@ function initHTML(timeStamp) {
 	var weekTpl = getWeekTpl();
 	var datesTpl = getDateTpl(timeStr);
 
-	var $datePicker = $('<div class="dp-wrap" id="varfn-dp"><div class="dp-menu"><div class="dp-nav" id="varfn-lastY" title="上一年">&lt;&lt;</div><div class="dp-nav" id="varfn-lastM" title="上一月">&lt;</div><div class="ym"><span class="y" id="varfn-dp-y">' + curYear + '</span> 年 <span class="m" id="varfn-dp-m">' + curMonth + '</span> 月 </div><div class="dp-nav" id="varfn-nextM" title="下一月">&gt;</div><div class="dp-nav" id="varfn-nextY" title="下一年">&gt;&gt;</div></div><div class="day" id="varfn-dp-day">' + weekTpl + '</div><ul class="date" id="varfn-dp-date">' + datesTpl + '</ul></div>');
+	var $datePicker = $('<div class="dp-wrap" id="varfn-dp"><div class="dp-menu"><div class="dp-nav" id="varfn-lastY" title="上一年">&lt;&lt;</div><div class="dp-nav" id="varfn-lastM" title="上一月">&lt;</div><div class="ym"><span class="y" data-type="year" id="varfn-dp-y">' + curYear + '</span> 年 <span class="m" data-type="month" id="varfn-dp-m">' + curMonth + '</span> 月 </div><div class="dp-nav" id="varfn-nextM" title="下一月">&gt;</div><div class="dp-nav" id="varfn-nextY" title="下一年">&gt;&gt;</div></div><div class="day" id="varfn-dp-day">' + weekTpl + '</div><ul class="date" id="varfn-dp-date">' + datesTpl + '</ul></div>');
 	$('body').append($datePicker);
 }
 
-function initSelection(data) {
+////////////////////////////////////////////////////////////////////////////
+
+var selectionData = {
+	year: (function() {
+		var arr = [];
+		var start = new Date().getFullYear() - 50;
+		for (var i = 0; i < 100; i++) {
+			arr.push(start++);
+		}
+		return arr;
+	})(),
+	month: (function() {
+		return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+	})()
+};
+
+function initSelection() {
 	var $html = null;
 	$('#varfn-dp-y, #varfn-dp-m').on('click', function(e) {
 
 		var $this = $(this);
+		var type = $this.data('type');
 		var width = $this.outerWidth();
 		var $position = $this.position();
 		var left = $position.left;
 		var top = $position.top;
 		var html = '';
+		var data = selectionData[type];
 
 		if ($this.hasClass('active')) {
 			return false;
@@ -151,7 +169,7 @@ function initSelection(data) {
 		$this.addClass('active').siblings('span').removeClass('active');
 		$('.date-selector').remove();
 
-		html += '<div class="date-selector"><ul>';
+		html += '<div class="date-selector"><ul data-type="' + type + '">';
 		for (var i = 0; i < data.length; i++) {
 			html += '<li>' + data[i] + '</li>';
 		}
@@ -159,9 +177,9 @@ function initSelection(data) {
 		$html = $(html);
 		$('#varfn-dp').append($html);
 		$html.css({
-			width: width - 2,
+			width: width,
 			left: left,
-			top: top + 30
+			top: top + 28
 		}).show();
 
 		return false;
@@ -173,12 +191,25 @@ function initSelection(data) {
 	});
 }
 
+function bindSelection() {
+	$('.date-selector').on('click', 'li', function() {
+		var $this = $(this);
+		var type = $this.parent().data('type');
+		var val = $this.text();
+
+	});
+}
+
 function changeDate(date) {
 	var datesTpl = getDateTpl(date);
 	$('#varfn-dp-date').html(datesTpl);
 }
 
-$(function() {
+function init() {
 	initHTML();
-	initSelection([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	initSelection();
+}
+
+$(function() {
+	init();
 });
