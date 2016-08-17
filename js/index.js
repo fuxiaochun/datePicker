@@ -3,6 +3,13 @@
  * @author Fu Xiaochun
  */
 
+var theCurDate = {
+	year: getDates().year,
+	month: getDates().month,
+	date: getDates().date
+};
+
+// 根据时间戳获取时间信息。
 function getDates(timeStamp) {
 	var D = typeof timeStamp === 'undefined' ? new Date() : new Date(timeStamp);
 	return {
@@ -16,10 +23,12 @@ function getDates(timeStamp) {
 	};
 }
 
+// 获取指定月的总天数
 function getDaysEveryMonth(y, m, d) {
 	return new Date(y, m, d).getDate();
 }
 
+// 获取星期的html模板
 function getWeekTpl() {
 	var week = '日一二三四五六';
 	var cls = '';
@@ -31,10 +40,12 @@ function getWeekTpl() {
 	return html;
 }
 
+// 获取指定日期是星期几
 function getTheDay(y, m, d) {
 	return new Date(y, m, d).getDay();
 }
 
+// 处理生成日历天数的数组。
 function makeDaysArr(len, position, monthDays) {
 	var arr = [];
 	var i = 0;
@@ -50,6 +61,7 @@ function makeDaysArr(len, position, monthDays) {
 	return arr;
 }
 
+// 以周为单位生成日历数据，返回二维数组。
 function makeDateListByWeek(arr) {
 	var len = arr.length;
 	var weeks = len / 7;
@@ -63,6 +75,7 @@ function makeDateListByWeek(arr) {
 	return tempArr;
 }
 
+// 根据时间戳获取指定月的日历的HTML模板
 function getDateTpl(timeStamp) {
 
 	var D = getDates(timeStamp);
@@ -122,6 +135,7 @@ function getDateTpl(timeStamp) {
 	return html;
 }
 
+// 初始化渲染日历
 function initHTML(timeStamp) {
 	var timeStr = typeof timeStamp === 'undefined' ? +new Date() : timeStamp;
 	var curYear = getDates(timeStr).year;
@@ -129,12 +143,13 @@ function initHTML(timeStamp) {
 	var weekTpl = getWeekTpl();
 	var datesTpl = getDateTpl(timeStr);
 
-	var $datePicker = $('<div class="dp-wrap" id="varfn-dp"><div class="dp-menu"><div class="dp-nav" id="varfn-lastY" title="上一年">&lt;&lt;</div><div class="dp-nav" id="varfn-lastM" title="上一月">&lt;</div><div class="ym"><span class="y" data-type="year" id="varfn-dp-y">' + curYear + '</span> 年 <span class="m" data-type="month" id="varfn-dp-m">' + curMonth + '</span> 月 </div><div class="dp-nav" id="varfn-nextM" title="下一月">&gt;</div><div class="dp-nav" id="varfn-nextY" title="下一年">&gt;&gt;</div></div><div class="day" id="varfn-dp-day">' + weekTpl + '</div><ul class="date" id="varfn-dp-date">' + datesTpl + '</ul></div>');
+	var $datePicker = $('<div class="dp-wrap" id="varfn-dp"><div class="dp-menu"><div class="dp-nav" id="varfn-lastY" title="上一年">&lt;&lt;</div><div class="dp-nav" id="varfn-lastM" title="上一月">&lt;</div><div class="ym"><dl class="y"><dt data-type="year" id="varfn-curYear">' + curYear + '</dt></dl><p>年</p><dl class="m"><dt data-type="month" id="varfn-curMonth">' + curMonth + '</dt></dl><p>月</p></div><div class="dp-nav" id="varfn-nextM" title="下一月">&gt;</div><div class="dp-nav" id="varfn-nextY" title="下一年">&gt;&gt;</div></div><div class="day" id="varfn-dp-day">' + weekTpl + '</div><ul class="date" id="varfn-dp-date">' + datesTpl + '</ul></div>');
 	$('body').append($datePicker);
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
+// 日历下拉选项数据
 var selectionData = {
 	year: (function() {
 		var arr = [];
@@ -149,62 +164,72 @@ var selectionData = {
 	})()
 };
 
+// 初始化日历年月下拉选项
 function initSelection() {
 	var $html = null;
-	$('#varfn-dp-y, #varfn-dp-m').on('click', function(e) {
+	$('#varfn-curYear, #varfn-curMonth').on('click', function(e) {
 
 		var $this = $(this);
+		var $parent = $this.parent();
 		var type = $this.data('type');
-		var width = $this.outerWidth();
-		var $position = $this.position();
-		var left = $position.left;
-		var top = $position.top;
 		var html = '';
 		var data = selectionData[type];
 
-		if ($this.hasClass('active')) {
+		if ($parent.hasClass('active')) {
 			return false;
 		}
 
-		$this.addClass('active').siblings('span').removeClass('active');
+		$parent.addClass('active').siblings('dl').removeClass('active');
 		$('.date-selector').remove();
 
-		html += '<div class="date-selector"><ul data-type="' + type + '">';
+		html += '<dd class="date-selector"><ul>';
 		for (var i = 0; i < data.length; i++) {
 			html += '<li>' + data[i] + '</li>';
 		}
-		html += '</ul></div>';
+		html += '</ul></dd>';
 		$html = $(html);
-		$('#varfn-dp').append($html);
-		$html.css({
-			width: width,
-			left: left,
-			top: top + 28
-		}).show();
+		$parent.append($html);
+		$html.show();
+
+		bindSelection();
 
 		return false;
 	});
 
 	$(document).on('click', function() {
-		$('.date-selector').remove();
-		$('.ym span').removeClass('active');
+		$('.date-selector').hide();
+		$('.ym dl').removeClass('active');
 	});
 }
 
+// 获取下拉选择后的日期
+function getSelectedDate() {
+	var y = $('#varfn-curYear').text();
+	var m = $('#varfn-curMonth').text();
+	return y + '/' + m + '/1';
+}
+
+// 绑定下拉选项相关事件。
 function bindSelection() {
-	$('.date-selector').on('click', 'li', function() {
+	var $selector = $('.date-selector');
+	$selector.on('click', 'li', function() {
 		var $this = $(this);
-		var type = $this.parent().data('type');
+		var $p = $this.parents('dd');
 		var val = $this.text();
-
+		$p.siblings('dt').text(val);
+		$p.hide();
+		$('.ym dl').removeClass('active');
+		changeDate(getSelectedDate());
 	});
 }
 
+// 根据拿到的日历数据重新渲染日历
 function changeDate(date) {
 	var datesTpl = getDateTpl(date);
 	$('#varfn-dp-date').html(datesTpl);
 }
 
+// 初始化日历
 function init() {
 	initHTML();
 	initSelection();
