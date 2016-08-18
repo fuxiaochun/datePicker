@@ -2,7 +2,7 @@
  * @author Fu Xiaochun
  */
 .red{color: #F30;}
-.dp-wrap{width: 280px;border: 1px solid #F30;background-color: #fff;position: absolute;left: 10px;top:10px;font-size: 12px;border-radius: 3px;}
+.dp-wrap{width: 280px;border: 1px solid #F30;background-color: #fff;position: absolute;left: 10px;top:10px;font-size: 12px;border-radius: 3px;display: none;}
 .dp-wrap ul,.dp-wrap li,.dp-wrap dl,.dp-wrap dt,.dp-wrap dd,.dp-wrap p{margin: 0;padding: 0;}
 .dp-wrap li{list-style: none;}
 .dp-menu{height: 30px;line-height: 30px;padding:5px;border-bottom: 1px solid #eee;}
