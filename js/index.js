@@ -221,7 +221,42 @@ function bindSelection() {
 		$('.ym dl').removeClass('active');
 		changeDate(getSelectedDate());
 	});
+
+	// 滚轮事件
+	var $selectorContent = $selector.children('ul');
+	var selectorHeight = $selector.height();
+	var whellContentTop = 0;
+	var pMinTop = selectorHeight - $selectorContent.height();
+	var movedifs = 100;
+
+	function scroll(n) {
+		if (n > 0) { // up
+			whellContentTop += movedifs;
+			whellContentTop = whellContentTop > 0 ? 0 : whellContentTop;
+		} else { // down
+			whellContentTop -= movedifs;
+			whellContentTop = whellContentTop < pMinTop ? pMinTop : whellContentTop;
+		}
+
+		$selectorContent.stop().animate({
+			'top': whellContentTop
+		}, 200);
+	}
+
+	$selector[0].onmousewheel = function(evt) {
+		var e = evt || window.event;
+		scroll(e.wheelDelta);
+		return false;
+	};
+
+	$selector.on('DOMMouseScroll', function(e) {
+		scroll(-e.detail);
+		return false;
+	});
 }
+
+// 点击选择年月
+
 
 // 根据拿到的日历数据重新渲染日历
 function changeDate(date) {
